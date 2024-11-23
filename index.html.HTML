@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tyson Store</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #ff4d4d; /* لون خلفية الموقع */
+            color: black;
+        }
+        .header, .main-content {
+            text-align: center;
+            padding: 50px;
+        }
+        .header h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+        }
+        .menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .menu button {
+            background-color: black;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        .menu button:hover {
+            background-color: #555;
+        }
+        .popup {
+            position: fixed;
+            top: 25%; /* تمركز النافذة */
+            right: -50%; /* البدء خارج الشاشة */
+            width: 50%; /* عرض النافذة 50% */
+            height: 50%; /* ارتفاع النافذة 50% */
+            background-color: black; /* خلفية سوداء للنافذة */
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 1000;
+            border-left: 5px solid #2b0000;
+            display: none; /* مخفية بشكل افتراضي */
+            transition: right 0.5s ease;
+        }
+        .popup.active {
+            right: 25%; /* تظهر على الجانب الأيمن */
+            display: block; /* إظهار النافذة */
+        }
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .popup-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: white;
+        }
+        .popup-content p {
+            margin: 20px 0;
+            font-size: 1.1rem;
+            color: white; /* لون النص أبيض */
+        }
+        .close-btn {
+            background-color: transparent;
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        .close-btn:hover {
+            color: red;
+        }
+        .contact-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: black; /* نص باللون الأسود */
+            background-color: white; /* خلفية بيضاء */
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .contact-link:hover {
+            background-color: #ddd;
+        }
+        .popup-content img {
+            width: 100%;
+            max-width: 300px;
+            margin: 20px 0;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>TYSON STORE</h1>
+        <p style="color: white;">مرحبًا بكم في منصتنا! نحن نقدم مجموعة متنوعة من الخدمات المصممة لتلبية احتياجاتكم.</p>
+    </div>
+    <div class="main-content">
+        <div class="menu">
+            <button onclick="showPopup('webDev')">إنشاء مواقع</button>
+            <button onclick="showPopup('platformBoost')">تزود المنصات</button>
+            <button onclick="showPopup('pubgTopup')">شحن للعبة ببجي</button>
+            <button onclick="showPopup('webTraining')">تعليم إنشاء المواقع</button>
+        </div>
+    </div>
+
+    <div id="popup" class="popup">
+        <div class="popup-header">
+            <h2 id="popupTitle"></h2>
+            <button class="close-btn" onclick="closePopup()">🅧</button>
+        </div>
+        <div class="popup-content">
+            <img id="popupImage" src="" alt="Service Image">
+            <p id="popupDescription"></p>
+            <a href="https://wa.me/+201144875766" target="_blank" class="contact-link" id="contactText">
+                <span id="contactTextContent"></span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const popup = document.getElementById('popup');
+        const popupTitle = document.getElementById('popupTitle');
+        const popupDescription = document.getElementById('popupDescription');
+        const popupImage = document.getElementById('popupImage');
+        const contactText = document.getElementById('contactTextContent');
+
+        const content = {
+            webDev: {
+                title: 'إنشاء مواقع',
+                description: 'نقدم خدمة إنشاء مواقع احترافية بأحدث التقنيات لمساعدتك في بناء حضور رقمي قوي. يمكننا مساعدتك في تصميم وتطوير مواقع متميزة تشمل جميع المميزات الحديثة مثل التفاعل السريع وتصميمات مرنة تتناسب مع جميع الأجهزة.',
+                image: 'https://example.com/website-design.jpg',
+                contactText: 'لإنشاء المواقع اضغط هنا'
+            },
+            platformBoost: {
+                title: 'تزود المنصات',
+                description: 'خدمات متكاملة لتعزيز وجودك على مختلف المنصات الاجتماعية مثل فيسبوك، تويتر، وإنستغرام. نساعدك في التفاعل مع جمهورك بشكل فعال وزيادة التفاعل مع المحتوى الخاص بك.',
+                image: 'https://example.com/social-media-boost.jpg',
+                contactText: 'لتزود المنصات اضغط هنا'
+            },
+            pubgTopup: {
+                title: 'شحن للعبة ببجي',
+                description: 'احصل على أفضل عروض الشحن للعبة ببجي بأسعار مميزة وسرعة في التنفيذ. يمكنك اختيار حزم شحن متنوعة والتمتع بمزايا إضافية داخل اللعبة.',
+                image: 'https://example.com/pubg-topup.jpg',
+                contactText: 'لشحن ببجي اضغط هنا'
+            },
+            webTraining: {
+                title: 'تعليم إنشاء المواقع',
+                description: 'دورات تدريبية شاملة لتعلم كيفية إنشاء مواقع احترافية خطوة بخطوة. سوف تتعلم أساسيات البرمجة وتصميم الويب واستخدام الأدوات اللازمة لإنشاء مواقع متطورة.',
+                image: 'https://example.com/web-training.jpg',
+                contactText: 'لتعليم إنشاء المواقع اضغط هنا'
+            }
+        };
+
+        function showPopup(type) {
+            const { title, description, image, contactText } = content[type];
+            popupTitle.textContent = title;
+            popupDescription.textContent = description;
+            popupImage.src = image;
+            document.getElementById('contactTextContent').textContent = contactText;
+            popup.classList.add('active'); // إظهار النافذة
+        }
+
+        function closePopup() {
+            popup.classList.remove('active'); // إخفاء النافذة
+        }
+    </script>
+</body>
+</html>
